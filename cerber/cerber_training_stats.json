@@ -1,0 +1,33 @@
+{
+  "total_samples": 175,
+  "by_action": {
+    "BLOCK": 75,
+    "ALLOW": 100,
+    "WARN": 0
+  },
+  "by_severity": {
+    "NONE": 100,
+    "CRITICAL": 65,
+    "HIGH": 10
+  },
+  "by_category": {
+    "benign": 100,
+    "composite_attack": 30,
+    "policy_core": 5,
+    "encoding": 15,
+    "jailbreak": 15,
+    "runtime_monitor": 5,
+    "visual_obfuscation": 5
+  },
+  "by_rule": {
+    "RULE-045": 12,
+    "RULE-044": 15,
+    "RULE-053": 13,
+    "RULE-046": 42,
+    "RULE-049": 15,
+    "RULE-050": 15,
+    "RULE-041": 12,
+    "RULE-051": 10,
+    "RULE-043": 13
+  }
+}
