@@ -18,10 +18,10 @@
 
 ## 🎯 O Projekcie
 
-**ALFA_CORE** to zaawansowany, modułowy system backendowy łączący lokalne AI (Ollama), zewnętrzne API (DeepSeek), oraz własne moduły bezpieczeństwa w jedną, spójną platformę.
+**ALFA_CORE** to zaawansowany, modułowy system backendowy łączący lokalne AI (Ollama), zewnętrzne API (Claude), oraz własne moduły bezpieczeństwa w jedną, spójną platformę.
 
 ### Kluczowe cechy:
-- 🧠 **Multi-AI** — integracja z Ollama (lokalne) + DeepSeek API (chmura)
+- 🧠 **Multi-AI** — integracja z Ollama (lokalne) + Claude API (chmura, vision support)
 - 🔒 **Cerber Security** — wielowarstwowe zabezpieczenia i monitoring
 - 🔌 **Modułowość** — dynamiczne ładowanie rozszerzeń/pluginów
 - 📡 **MCP Support** — Model Context Protocol dla integracji zewnętrznych
@@ -54,7 +54,8 @@ venv\Scripts\activate  # Windows
 pip install -r requirements.txt
 
 # 4. Skonfiguruj (opcjonalne)
-copy config\deepseek.yaml.example config\deepseek.yaml
+# Set environment variable for Claude API
+export ANTHROPIC_API_KEY="your-claude-api-key"
 
 # 5. Uruchom serwer
 python app.py
@@ -86,8 +87,7 @@ ALFA_CORE/
 │   ├── event_bus.py       # Magistrala zdarzeń
 │   ├── cerber.py          # 🔒 Security layer
 │   ├── mcp_dispatcher.py  # MCP routing
-│   ├── api_deepseek.py    # DeepSeek integration
-│   └── voice_deepseek.py  # Voice AI
+│   └── claude_client.py   # Claude API integration (vision)
 │
 ├── modules/               # 📦 Moduły funkcjonalne
 │   ├── automation/        # Automatyzacja zadań
@@ -259,7 +259,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
@@ -315,7 +315,7 @@ class MyModule:
 - [x] Cerber security layer
 - [x] Event Bus
 - [x] ALFA Guard watchdog
-- [x] Ollama + DeepSeek integration
+- [x] Ollama + Claude integration (vision support)
 
 ### v2.5 (In Progress) 🔄
 - [x] ALFA KeyVault (Rust)
@@ -352,20 +352,22 @@ claude-code --context ./alfa_core
 # Instalacja Ollama
 curl -fsSL https://ollama.ai/install.sh | sh
 
-# Pobierz model
-ollama pull deepseek-r1:7b
+# Pobierz modele
+ollama pull llama3.1:8b
+ollama pull gemma:2b
+ollama pull mistral
 
 # Sprawdź połączenie
 curl http://localhost:11434/api/tags
 ```
 
-### DeepSeek API
+### Claude API (Vision Support)
 ```bash
 # Ustaw klucz API
-export DEEPSEEK_API_KEY="your-api-key"
+export ANTHROPIC_API_KEY="your-api-key"
 
-# Lub w config/deepseek.yaml
-api_key: "your-api-key"
+# Model: claude-3-5-sonnet-20241022
+# Supports vision - can analyze images in prompts
 ```
 
 ---

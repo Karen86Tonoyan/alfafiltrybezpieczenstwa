@@ -7,7 +7,7 @@ REST API dla ALFA System.
 Endpoints:
     /health          - Health check
     /status          - System status
-    /chat            - AI chat (Ollama/DeepSeek)
+    /chat            - AI chat (Ollama/Claude)
     /modules         - Module management
     /cerber          - Security endpoints
     /events          - EventBus access
@@ -240,10 +240,11 @@ async def chat(
     Send prompt to AI (Ollama).
     
     Profiles:
-    - fast: mistral, low temp
-    - balanced: llama3, medium temp
-    - creative: deepseek-r1, high temp
-    - security: low temp, strict
+    - fast: gemma:2b, low temp
+    - balanced: llama3.1:8b, medium temp
+    - creative: mistral, high temp
+    - security: llama3, low temp, strict
+    - claude: Claude Sonnet with vision support
     """
     import time
     start = time.time()

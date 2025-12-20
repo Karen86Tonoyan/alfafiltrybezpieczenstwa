@@ -391,7 +391,7 @@ class AlfaBrain:
             return
         
         print("Chat functionality requires API connection.")
-        print("Use 'python core/api_deepseek.py' for DeepSeek or start Ollama.")
+        print("Use Claude API (with ANTHROPIC_API_KEY) or start Ollama.")
     
     def cmd_model(self, args: str):
         """Pokaż model."""

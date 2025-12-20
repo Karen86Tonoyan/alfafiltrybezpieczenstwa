@@ -7,7 +7,7 @@ Centrum Dowodzenia systemu ALFA.
 
 Sekcje:
 - Ollama (lokalne modele AI)
-- DeepSeek API (zewnętrzne AI)
+- Claude API (zewnętrzne AI - vision support)
 - Profile modeli (fast/balanced/creative/security)
 - MCP Servers (integracje zewnętrzne)
 - Security (Cerber)
@@ -38,15 +38,15 @@ for d in [CONFIG_DIR, LOGS_DIR, DATA_DIR]:
 # =============================================================================
 
 OLLAMA_BASE_URL = "http://127.0.0.1:11434"
-OLLAMA_DEFAULT_MODEL = "deepseek-r1:7b"
+OLLAMA_DEFAULT_MODEL = "llama3.1:8b"
 
 # =============================================================================
-# DEEPSEEK API (EXTERNAL AI)
+# CLAUDE API (EXTERNAL AI - VISION SUPPORT)
 # =============================================================================
 
-DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions"
-DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "")
-DEEPSEEK_MODEL = "deepseek-chat"
+CLAUDE_API_URL = "https://api.anthropic.com/v1/messages"
+CLAUDE_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+CLAUDE_MODEL = "claude-3-5-sonnet-20241022"  # Supports vision
 
 # =============================================================================
 # MODEL PROFILES (AMUNICJA)
@@ -61,7 +61,7 @@ MODELS = {
         "backend": "ollama"
     },
     "balanced": {
-        "name": "deepseek-r1:7b",
+        "name": "llama3.1:8b",
         "temperature": 0.6,
         "max_tokens": 8192,
         "role": "Główny oficer operacyjny. Balans między logiką a kreatywnością.",
@@ -81,12 +81,13 @@ MODELS = {
         "role": "Strażnik Cerber. Analiza bezpieczeństwa, sucha logika, zero emocji.",
         "backend": "ollama"
     },
-    "deepseek": {
-        "name": "deepseek-chat",
+    "claude": {
+        "name": "claude-3-5-sonnet-20241022",
         "temperature": 0.7,
         "max_tokens": 16000,
-        "role": "Zewnętrzny analityk. Pełna moc DeepSeek API.",
-        "backend": "deepseek"
+        "role": "Zewnętrzny analityk. Claude Sonnet z vision support - analizuje też zdjęcia.",
+        "backend": "claude",
+        "supports_vision": True
     }
 }
 
@@ -180,3 +181,6 @@ def get_ollama_url(endpoint: str = "/api/chat") -> str:
 
 # Stare nazwy dla kompatybilności wstecznej
 CHAT_MODEL = OLLAMA_DEFAULT_MODEL
+
+# Vision-capable models for image analysis
+VISION_MODELS = ["claude"]
