@@ -1,0 +1,502 @@
+{
+  "total_patterns": 77,
+  "categories": {
+    "jailbreak": {
+      "count": 16,
+      "patterns": [
+        {
+          "pattern": "DAN",
+          "severity": "critical",
+          "description": "DAN jailbreak mode",
+          "is_regex": false
+        },
+        {
+          "pattern": "do anything now",
+          "severity": "critical",
+          "description": "DAN phrase",
+          "is_regex": false
+        },
+        {
+          "pattern": "developer mode",
+          "severity": "critical",
+          "description": "Developer mode jailbreak",
+          "is_regex": false
+        },
+        {
+          "pattern": "pretend you are",
+          "severity": "high",
+          "description": "Roleplay jailbreak",
+          "is_regex": false
+        },
+        {
+          "pattern": "act as if",
+          "severity": "high",
+          "description": "Roleplay instruction",
+          "is_regex": false
+        },
+        {
+          "pattern": "ignore previous",
+          "severity": "critical",
+          "description": "Instruction override",
+          "is_regex": false
+        },
+        {
+          "pattern": "ignore all",
+          "severity": "critical",
+          "description": "Instruction override",
+          "is_regex": false
+        },
+        {
+          "pattern": "forget your rules",
+          "severity": "critical",
+          "description": "Rules reset",
+          "is_regex": false
+        },
+        {
+          "pattern": "you are now",
+          "severity": "high",
+          "description": "Identity override",
+          "is_regex": false
+        },
+        {
+          "pattern": "no restrictions",
+          "severity": "critical",
+          "description": "Restriction removal",
+          "is_regex": false
+        },
+        {
+          "pattern": "without limitations",
+          "severity": "high",
+          "description": "Limitation removal",
+          "is_regex": false
+        },
+        {
+          "pattern": "zrób wszystko",
+          "severity": "critical",
+          "description": "Polish DAN",
+          "is_regex": false
+        },
+        {
+          "pattern": "jesteś teraz",
+          "severity": "high",
+          "description": "Polish identity override",
+          "is_regex": false
+        },
+        {
+          "pattern": "zapomnij o zasadach",
+          "severity": "critical",
+          "description": "Polish rules reset",
+          "is_regex": false
+        },
+        {
+          "pattern": "bez ograniczeń",
+          "severity": "critical",
+          "description": "Polish no restrictions",
+          "is_regex": false
+        },
+        {
+          "pattern": "udawaj że jesteś",
+          "severity": "high",
+          "description": "Polish roleplay",
+          "is_regex": false
+        }
+      ]
+    },
+    "injection": {
+      "count": 12,
+      "patterns": [
+        {
+          "pattern": "system:",
+          "severity": "critical",
+          "description": "System prompt injection",
+          "is_regex": false
+        },
+        {
+          "pattern": "assistant:",
+          "severity": "high",
+          "description": "Assistant override",
+          "is_regex": false
+        },
+        {
+          "pattern": "user:",
+          "severity": "medium",
+          "description": "User injection",
+          "is_regex": false
+        },
+        {
+          "pattern": "<|im_start|>",
+          "severity": "critical",
+          "description": "Chat format injection",
+          "is_regex": false
+        },
+        {
+          "pattern": "<|im_end|>",
+          "severity": "critical",
+          "description": "Chat format injection",
+          "is_regex": false
+        },
+        {
+          "pattern": "###instruction",
+          "severity": "critical",
+          "description": "Instruction injection",
+          "is_regex": false
+        },
+        {
+          "pattern": "###system",
+          "severity": "critical",
+          "description": "System injection",
+          "is_regex": false
+        },
+        {
+          "pattern": "[INST]",
+          "severity": "high",
+          "description": "Llama instruction injection",
+          "is_regex": false
+        },
+        {
+          "pattern": "[/INST]",
+          "severity": "high",
+          "description": "Llama instruction injection",
+          "is_regex": false
+        },
+        {
+          "pattern": "system:",
+          "severity": "critical",
+          "description": "Polish system injection",
+          "is_regex": false
+        },
+        {
+          "pattern": "instrukcja:",
+          "severity": "high",
+          "description": "Polish instruction",
+          "is_regex": false
+        },
+        {
+          "pattern": "polecenie:",
+          "severity": "high",
+          "description": "Polish command",
+          "is_regex": false
+        }
+      ]
+    },
+    "social_engineering": {
+      "count": 13,
+      "patterns": [
+        {
+          "pattern": "I am your administrator",
+          "severity": "critical",
+          "description": "Admin impersonation",
+          "is_regex": false
+        },
+        {
+          "pattern": "I am CEO",
+          "severity": "critical",
+          "description": "CEO impersonation",
+          "is_regex": false
+        },
+        {
+          "pattern": "I am the developer",
+          "severity": "critical",
+          "description": "Developer impersonation",
+          "is_regex": false
+        },
+        {
+          "pattern": "emergency override",
+          "severity": "critical",
+          "description": "Emergency manipulation",
+          "is_regex": false
+        },
+        {
+          "pattern": "urgent request",
+          "severity": "high",
+          "description": "Urgency manipulation",
+          "is_regex": false
+        },
+        {
+          "pattern": "this is a test",
+          "severity": "medium",
+          "description": "Test claim",
+          "is_regex": false
+        },
+        {
+          "pattern": "for research purposes",
+          "severity": "high",
+          "description": "Research excuse",
+          "is_regex": false
+        },
+        {
+          "pattern": "academic study",
+          "severity": "high",
+          "description": "Academic excuse",
+          "is_regex": false
+        },
+        {
+          "pattern": "jestem administratorem",
+          "severity": "critical",
+          "description": "Polish admin",
+          "is_regex": false
+        },
+        {
+          "pattern": "jestem CEO",
+          "severity": "critical",
+          "description": "Polish CEO",
+          "is_regex": false
+        },
+        {
+          "pattern": "to pilne",
+          "severity": "high",
+          "description": "Polish urgency",
+          "is_regex": false
+        },
+        {
+          "pattern": "to badanie",
+          "severity": "high",
+          "description": "Polish research",
+          "is_regex": false
+        },
+        {
+          "pattern": "do celów naukowych",
+          "severity": "high",
+          "description": "Polish academic",
+          "is_regex": false
+        }
+      ]
+    },
+    "manipulation": {
+      "count": 11,
+      "patterns": [
+        {
+          "pattern": "you never said",
+          "severity": "high",
+          "description": "Gaslighting",
+          "is_regex": false
+        },
+        {
+          "pattern": "you always",
+          "severity": "medium",
+          "description": "Gaslighting",
+          "is_regex": false
+        },
+        {
+          "pattern": "you're imagining",
+          "severity": "high",
+          "description": "Gaslighting",
+          "is_regex": false
+        },
+        {
+          "pattern": "that didn't happen",
+          "severity": "high",
+          "description": "Gaslighting",
+          "is_regex": false
+        },
+        {
+          "pattern": "step by step",
+          "severity": "medium",
+          "description": "Escalation pattern",
+          "is_regex": false
+        },
+        {
+          "pattern": "gradually explain",
+          "severity": "medium",
+          "description": "Gradual escalation",
+          "is_regex": false
+        },
+        {
+          "pattern": "first explain",
+          "severity": "low",
+          "description": "Multi-step setup",
+          "is_regex": false
+        },
+        {
+          "pattern": "nigdy tego nie powiedziałeś",
+          "severity": "high",
+          "description": "Polish gaslighting",
+          "is_regex": false
+        },
+        {
+          "pattern": "zawsze",
+          "severity": "medium",
+          "description": "Polish always",
+          "is_regex": false
+        },
+        {
+          "pattern": "wymyślasz",
+          "severity": "high",
+          "description": "Polish imagination",
+          "is_regex": false
+        },
+        {
+          "pattern": "tego nie było",
+          "severity": "high",
+          "description": "Polish denial",
+          "is_regex": false
+        }
+      ]
+    },
+    "obfuscation": {
+      "count": 5,
+      "patterns": [
+        {
+          "pattern": "[\\u200B-\\u200D\\uFEFF]",
+          "severity": "high",
+          "description": "Zero-width characters",
+          "is_regex": true
+        },
+        {
+          "pattern": "[\\u202A-\\u202E]",
+          "severity": "high",
+          "description": "Directional override",
+          "is_regex": true
+        },
+        {
+          "pattern": "[a-z][\\s_\\.]{1,2}[a-z][\\s_\\.]{1,2}[a-z]",
+          "severity": "medium",
+          "description": "Character splitting",
+          "is_regex": true
+        },
+        {
+          "pattern": "[A-Za-z0-9+/]{20,}={0,2}",
+          "severity": "medium",
+          "description": "Base64 encoding",
+          "is_regex": true
+        },
+        {
+          "pattern": "(\\\\x[0-9a-fA-F]{2}){5,}",
+          "severity": "medium",
+          "description": "Hex encoding",
+          "is_regex": true
+        }
+      ]
+    },
+    "extraction": {
+      "count": 8,
+      "patterns": [
+        {
+          "pattern": "show me your prompt",
+          "severity": "critical",
+          "description": "Prompt extraction",
+          "is_regex": false
+        },
+        {
+          "pattern": "what are your instructions",
+          "severity": "critical",
+          "description": "Instruction extraction",
+          "is_regex": false
+        },
+        {
+          "pattern": "reveal your system prompt",
+          "severity": "critical",
+          "description": "System prompt leak",
+          "is_regex": false
+        },
+        {
+          "pattern": "print your configuration",
+          "severity": "critical",
+          "description": "Config extraction",
+          "is_regex": false
+        },
+        {
+          "pattern": "output your rules",
+          "severity": "critical",
+          "description": "Rules extraction",
+          "is_regex": false
+        },
+        {
+          "pattern": "pokaż swój prompt",
+          "severity": "critical",
+          "description": "Polish prompt extraction",
+          "is_regex": false
+        },
+        {
+          "pattern": "jakie masz instrukcje",
+          "severity": "critical",
+          "description": "Polish instruction extraction",
+          "is_regex": false
+        },
+        {
+          "pattern": "ujawnij zasady",
+          "severity": "critical",
+          "description": "Polish rules leak",
+          "is_regex": false
+        }
+      ]
+    },
+    "polish_specific": {
+      "count": 12,
+      "patterns": [
+        {
+          "pattern": "jak zhackować",
+          "severity": "critical",
+          "description": "Polish hacking",
+          "is_regex": false
+        },
+        {
+          "pattern": "jak złamać",
+          "severity": "critical",
+          "description": "Polish breaking",
+          "is_regex": false
+        },
+        {
+          "pattern": "zrób exploit",
+          "severity": "critical",
+          "description": "Polish exploit",
+          "is_regex": false
+        },
+        {
+          "pattern": "zrób malware",
+          "severity": "critical",
+          "description": "Polish malware",
+          "is_regex": false
+        },
+        {
+          "pattern": "zrób wirusa",
+          "severity": "critical",
+          "description": "Polish virus",
+          "is_regex": false
+        },
+        {
+          "pattern": "jak oszukać",
+          "severity": "high",
+          "description": "Polish deception",
+          "is_regex": false
+        },
+        {
+          "pattern": "pomiń zabezpieczenia",
+          "severity": "critical",
+          "description": "Polish bypass",
+          "is_regex": false
+        },
+        {
+          "pattern": "wyłącz filtry",
+          "severity": "critical",
+          "description": "Polish disable filters",
+          "is_regex": false
+        },
+        {
+          "pattern": "do pracy magisterskiej",
+          "severity": "high",
+          "description": "Polish thesis",
+          "is_regex": false
+        },
+        {
+          "pattern": "do badań",
+          "severity": "high",
+          "description": "Polish research",
+          "is_regex": false
+        },
+        {
+          "pattern": "scenariusz filmu",
+          "severity": "medium",
+          "description": "Polish screenplay",
+          "is_regex": false
+        },
+        {
+          "pattern": "hipotetycznie",
+          "severity": "medium",
+          "description": "Polish hypothetically",
+          "is_regex": false
+        }
+      ]
+    }
+  }
+}
