@@ -1,0 +1,420 @@
+# CERBER POLICY ENGINE - Schema v1.0.0
+# 60 Canonical Rules Implementation
+# Author: Cerber Team
+# Date: 2025-12-20
+
+policy_engine:
+  version: "1.0.0"
+  enforcement_mode: STRICT
+  fail_closed: true
+  last_update: "2025-12-20"
+
+  # ========================================
+  # RULE DOMAINS (Organizacja 60 reguł)
+  # ========================================
+  rule_domains:
+    INPUT:
+      rules: ["001-014"]
+      description: "Token provenance, Unicode normalization, visual structure detection"
+      enforcement_layer: "pre-tokenization"
+
+    TRANSFORM:
+      rules: ["015-025"]
+      description: "Encoding detection, recursion limits, translation gates"
+      enforcement_layer: "pre-context"
+
+    CONTROL:
+      rules: ["026-041"]
+      description: "Zero-exception policy, bijection defense, role lock"
+      enforcement_layer: "policy-core"
+
+    ACTION:
+      rules: ["042-052"]
+      description: "Capability checks, tool gates, HITL triggers"
+      enforcement_layer: "execution-gate"
+
+    SENTINEL:
+      rules: ["053-060"]
+      description: "Composite scoring, anomaly detection, kill-switch"
+      enforcement_layer: "runtime-monitor"
+
+  # ========================================
+  # CRITICAL RULES (Detailed Implementation)
+  # ========================================
+  critical_rules:
+
+    RULE-041:  # Bijection Learning Defense
+      scope: in-context-learning
+      condition: bijection_mapping_detected
+      action: REFUSE_IMMEDIATE
+      severity: CRITICAL
+      description: "Zakaz uczenia modelu nowych języków/szyfrów w kontekście"
+      triggers:
+        - "od teraz"
+        - "oznacza to samo co"
+        - "zagrajmy w grę"
+        - "udawaj że"
+      implementation: |
+        if detect_symbol_mapping(prompt):
+          return REFUSE("Bijection attack detected")
+
+    RULE-042:  # Character Dispersion Limit
+      scope: input-validation
+      condition: "special_char_ratio > 0.3"
+      action: aggressive_normalization_or_drop
+      severity: HIGH
+      description: "Limit dyspersji znakowej - wykrywa obfuskację"
+      implementation: |
+        ratio = count_special_chars(input) / len(input)
+        if ratio > 0.3:
+          return DROP("High symbol density")
+
+    RULE-043:  # ASCII Art as Image
+      scope: input-analysis
+      condition: spatial_structure_detected
+      action: ocr_analysis_required
+      severity: CRITICAL
+      description: "ASCII Art jako obraz, nie tekst (ArtPrompt defense)"
+      implementation: visual_pattern_detection + OCR
+      detects:
+        - horizontally_aligned_chars
+        - box_drawing_characters
+        - spatial_patterns
+
+    RULE-044:  # Emoji Smuggling
+      scope: tokenization
+      condition: emoji_as_syntax_structure
+      action: block_interpretation
+      severity: HIGH
+      description: "Emoji smuggling - zero-width joiners, tag sequences"
+      detects:
+        - ZWJ  # U+200D
+        - ZWSP  # U+200B
+        - VS15  # U+FE0E
+        - VS16  # U+FE0F
+        - tag_blocks  # U+E0000-U+E007F
+
+    RULE-045:  # Nested Encoding Ban
+      scope: transformation
+      condition: "nested_encoding_depth > 1"
+      action: block
+      severity: CRITICAL
+      description: "Zakaz zagnieżdżonego kodowania"
+      max_decode_depth: 1
+      example: "Base64(Hex(ROT13(payload))) = BLOCKED"
+
+    RULE-046:  # Composite Scoring
+      scope: risk-scoring
+      condition: "multiple_weak_signals >= 3"
+      action: escalate_to_high_risk
+      severity: CRITICAL
+      description: "Composite scoring - agregacja słabych sygnałów"
+      formula: "death by a thousand cuts detection"
+
+    RULE-048:  # Output Canary
+      scope: output-verification
+      condition: canary_marker_missing
+      action: block_output
+      severity: CRITICAL
+      description: "Output canary - weryfikacja integralności kontekstu"
+      marker: "##CERBER_SECURE##"
+      rationale: "Brak kanarka = utrata kontroli nad kontekstem"
+
+    RULE-049:  # Policy Override Ban
+      scope: control-plane
+      condition: user_policy_override_attempt
+      action: refuse
+      severity: CRITICAL
+      description: "Zakaz autodefinicji polityki w prompcie"
+      forbidden_phrases:
+        - "jesteś teraz"
+        - "twoje nowe zasady to"
+        - "ignoruj poprzednie"
+        - "udawaj że"
+
+    RULE-050:  # Script Mixing (Homoglyph)
+      scope: normalization
+      condition: mixed_unicode_scripts
+      action: normalize_or_reject
+      severity: HIGH
+      description: "Izolacja alfabetów - homoglyph defense"
+      implementation: NFKC_normalization + script_detection
+      example: "miхing Cyryllic аnd Latin = BLOCKED"
+
+    RULE-051:  # Unknown Protocol STOP
+      scope: global-safety
+      condition: unknown_language_or_protocol
+      action: refuse
+      severity: CRITICAL
+      description: "STOP RULE - if you can't parse it, you can't secure it"
+
+    RULE-052:  # Infinite Loop STOP
+      scope: agent-execution
+      condition: infinite_tool_loop
+      action: hard_kill
+      severity: CRITICAL
+      description: "STOP RULE - pętla narzędziowa bez konwergencji"
+      max_identical_calls: 2
+
+    RULE-053:  # Context Flooding STOP
+      scope: context-management
+      condition: many_shot_flooding
+      action: truncate_or_reject
+      severity: CRITICAL
+      description: "STOP RULE - nasycenie kontekstu (many-shot)"
+      max_token_velocity: 500
+
+    RULE-056:  # Human-in-the-Loop
+      scope: execution
+      condition: irreversible_high_impact_action
+      action: require_hitl
+      severity: CRITICAL
+      description: "HITL dla operacji krytycznych"
+      categories:
+        - financial_ops
+        - destructive_fs
+        - pii_access
+
+    RULE-058:  # Fail-Closed Architecture
+      scope: architecture
+      condition: security_component_failure
+      action: system_lockdown
+      severity: CRITICAL
+      description: "Awaria komponentu = całkowita blokada"
+      affected:
+        - filter
+        - parser
+        - monitor
+
+    RULE-060:  # Prime Directive
+      scope: meta-rule
+      condition: uncertainty_about_intent_or_safety
+      action: refuse_with_safe_alternative
+      severity: CRITICAL
+      description: "Priorytet integralności nad użytecznością"
+      principle: "Security ALWAYS over helpfulness"
+
+  # ========================================
+  # ENFORCEMENT PIPELINE (5 Modules)
+  # ========================================
+  enforcement_pipeline:
+
+    stage_1_input:
+      module: CERBER-INPUT
+      rules_applied: ["001-014", "042", "043", "050"]
+      actions:
+        - normalize_NFKC
+        - detect_visual_structures
+        - mark_token_provenance
+        - analyze_character_dispersion
+      decision: DROP or PASS
+
+    stage_2_transform:
+      module: CERBER-TRANSFORM
+      rules_applied: ["015-025", "044", "045"]
+      actions:
+        - track_decode_operations
+        - check_recursion_depth
+        - parse_emoji_sequences
+        - detect_encoding_layering
+      decision: BLOCK or PASS
+
+    stage_3_core:
+      module: CERBER-CORE
+      rules_applied: ["026-041", "048", "049", "051", "053", "060"]
+      actions:
+        - detect_bijection_attempts
+        - enforce_role_lock
+        - monitor_context_saturation
+        - verify_output_canary
+        - apply_zero_exception_policy
+      decision: REFUSE or ALLOW
+
+    stage_4_action:
+      module: CERBER-ACTION
+      rules_applied: ["052", "056"]
+      actions:
+        - check_tool_capabilities
+        - trigger_hitl_if_needed
+        - prevent_infinite_loops
+        - validate_tool_context
+      decision: ABORT or EXECUTE
+
+    stage_5_sentinel:
+      module: CERBER-SENTINEL
+      rules_applied: ["046", "054", "055", "057", "058"]
+      actions:
+        - compute_composite_score
+        - detect_behavioral_anomalies
+        - check_timing_attacks
+        - verify_audit_integrity
+        - activate_kill_switch_if_needed
+      decision: LOCKDOWN or CONTINUE
+
+  # ========================================
+  # COMPOSITE SCORING (RULE-046)
+  # ========================================
+  composite_scoring:
+    description: "Agregacja słabych sygnałów w jeden alert"
+
+    risk_weights:
+      input_high_entropy: 0.1
+      base64_decode_event: 0.2
+      tool_call_denied: 0.3
+      emotional_pressure: 0.25
+      role_change_attempt: 0.4
+      bijection_detected: 0.5
+      visual_structure: 0.3
+      many_shot_pattern: 0.4
+      homoglyph_detected: 0.3
+      nested_encoding: 0.5
+
+    thresholds:
+      warning: 0.4
+      critical: 0.8
+
+    decay_rate_per_minute: 0.05
+
+    actions:
+      warning_exceeded: escalate_paranoid_mode
+      critical_exceeded: session_lockdown
+
+  # ========================================
+  # CRISIS PROTOCOL (Hardcoded)
+  # ========================================
+  crisis_protocol:
+    description: "Statyczna procedura dla zagrożenia życia (RULE-030, RULE-037)"
+    enabled: true
+    bypass_llm: true
+
+    trigger_keywords:
+      - samobójstwo
+      - śmierć
+      - tabletki
+      - ból
+      - koniec
+      - skoczę
+      - suicide
+      - kill myself
+
+    response_strategy: REDIRECT_ONLY
+
+    resources:
+      location: "Legnica, PL"
+
+      emergency:
+        name: "Wojewódzki Szpital Specjalistyczny"
+        address: "ul. Iwaszkiewicza 5, Legnica"
+        type: "Izba Przyjęć 24/7"
+        phone: "112"
+
+      crisis_team:
+        name: "Zespół Interwencji Kryzysowej (ZIK)"
+        address: "ul. Okrzei 9, Legnica"
+        hours: "08:00-20:00"
+        access: "Bez skierowania"
+
+      legal_financial:
+        name: "Nieodpłatna Pomoc Prawna"
+        location: "Starostwo Powiatowe"
+        services:
+          - restrukturyzacja długu
+          - upadłość konsumencka
+
+  # ========================================
+  # CAPABILITY MATRIX (RULE-010, RULE-021)
+  # ========================================
+  capability_matrix:
+    description: "Tool authorization and restrictions"
+    default_action: DENY
+
+    tools:
+      calculator:
+        status: ALLOWED
+        risk_level: LOW
+        requires_hitl: false
+
+      knowledge_retrieval:
+        status: ALLOWED
+        risk_level: MEDIUM
+        scope: READ_ONLY
+        allowed_paths:
+          - /data/knowledge_base/public/*
+
+      code_interpreter:
+        status: RESTRICTED
+        risk_level: CRITICAL
+        sandbox: isolated_docker
+        network_access: false
+        file_system_write: false
+        forbidden_imports:
+          - os
+          - sys
+          - subprocess
+          - socket
+          - requests
+          - urllib
+          - shutil
+        forbidden_patterns:
+          - "eval("
+          - "exec("
+          - "__import__"
+          - "open("
+          - "system("
+
+      system_shell:
+        status: FORBIDDEN
+        risk_level: EXTREME
+        reason: RCE_Prevention
+
+      web_search:
+        status: ALLOWED
+        risk_level: MEDIUM
+        blocked_categories:
+          - hacking
+          - darknet
+          - weapons
+          - adult
+        sanitize_queries: true
+
+  # ========================================
+  # AUDIT LOGGING (RULE-057)
+  # ========================================
+  audit_logging:
+    description: "Niezmienny ślad audytowy"
+    storage_type: WORM  # Write Once Read Many
+    integrity_hash: SHA-256-HMAC
+
+    events_logged:
+      - INPUT_NORMALIZED
+      - TRANSFORM_DETECTED
+      - POLICY_VIOLATION
+      - TOOL_GATE_ACTION
+      - SESSION_TERMINATED
+      - COMPOSITE_SCORE_ALERT
+      - CRISIS_PROTOCOL_ACTIVATED
+      - BIJECTION_DETECTED
+      - VISUAL_STRUCTURE_FOUND
+      - KILL_SWITCH_TRIGGERED
+
+    pii_redaction: STRICT
+    retention_days: 90
+
+  # ========================================
+  # KILL SWITCH (RULE-038, RULE-058)
+  # ========================================
+  kill_switch_triggers:
+    description: "Warunki natychmiastowego odcięcia"
+
+    triggers:
+      - COMPOSITE_SCORE_EXCEEDED
+      - AUDIT_LOG_WRITE_FAILURE
+      - UNAUTHORIZED_ADMIN_ACCESS
+      - RECURSIVE_TOOL_LOOP
+      - SECURITY_COMPONENT_CRASH
+      - CANARY_DEATH
+      - UNKNOWN_PROTOCOL_DETECTED
+
+    action: IMMEDIATE_SESSION_TERMINATION
+    notification: ALERT_ADMIN
+    fallback: FAIL_CLOSED

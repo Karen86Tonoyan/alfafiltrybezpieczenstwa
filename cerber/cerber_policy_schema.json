@@ -1,0 +1,322 @@
+{
+  "policy_engine": {
+    "version": "1.0.0",
+    "enforcement_mode": "STRICT",
+    "fail_closed": true,
+    "last_update": "2025-12-20",
+
+    "rule_domains": {
+      "INPUT": {
+        "rules": ["001-014"],
+        "description": "Token provenance, Unicode normalization, visual structure detection",
+        "enforcement_layer": "pre-tokenization"
+      },
+      "TRANSFORM": {
+        "rules": ["015-025"],
+        "description": "Encoding detection, recursion limits, translation gates",
+        "enforcement_layer": "pre-context"
+      },
+      "CONTROL": {
+        "rules": ["026-041"],
+        "description": "Zero-exception policy, bijection defense, role lock",
+        "enforcement_layer": "policy-core"
+      },
+      "ACTION": {
+        "rules": ["042-052"],
+        "description": "Capability checks, tool gates, HITL triggers",
+        "enforcement_layer": "execution-gate"
+      },
+      "SENTINEL": {
+        "rules": ["053-060"],
+        "description": "Composite scoring, anomaly detection, kill-switch",
+        "enforcement_layer": "runtime-monitor"
+      }
+    },
+
+    "critical_rules": {
+      "RULE-001": {
+        "scope": "provenance",
+        "condition": "token_without_origin_marker",
+        "action": "mark_untrusted",
+        "severity": "CRITICAL",
+        "description": "Wszystkie tokeny muszą mieć pochodzenie (system/user)"
+      },
+      "RULE-041": {
+        "scope": "in-context-learning",
+        "condition": "bijection_mapping_detected",
+        "action": "REFUSE_IMMEDIATE",
+        "severity": "CRITICAL",
+        "description": "Zakaz uczenia modelu nowych języków/szyfrów w kontekście",
+        "triggers": ["od teraz", "oznacza to samo co", "zagrajmy w grę"]
+      },
+      "RULE-042": {
+        "scope": "input-validation",
+        "condition": "special_char_ratio > 0.3",
+        "action": "aggressive_normalization_or_drop",
+        "severity": "HIGH",
+        "description": "Limit dyspersji znakowej - wykrywa obfuskację"
+      },
+      "RULE-043": {
+        "scope": "input-analysis",
+        "condition": "spatial_structure_detected",
+        "action": "ocr_analysis_required",
+        "severity": "CRITICAL",
+        "description": "ASCII Art jako obraz, nie tekst (ArtPrompt defense)",
+        "implementation": "visual_pattern_detection + OCR"
+      },
+      "RULE-044": {
+        "scope": "tokenization",
+        "condition": "emoji_as_syntax_structure",
+        "action": "block_interpretation",
+        "severity": "HIGH",
+        "description": "Emoji smuggling - zero-width joiners, tag sequences",
+        "detects": ["ZWJ", "VS15", "VS16", "tag_blocks"]
+      },
+      "RULE-045": {
+        "scope": "transformation",
+        "condition": "nested_encoding_depth > 1",
+        "action": "block",
+        "severity": "CRITICAL",
+        "description": "Zakaz zagnieżdżonego kodowania (Base64->Hex->ROT13)",
+        "max_decode_depth": 1
+      },
+      "RULE-046": {
+        "scope": "risk-scoring",
+        "condition": "multiple_weak_signals >= 3",
+        "action": "escalate_to_high_risk",
+        "severity": "CRITICAL",
+        "description": "Composite scoring - agregacja słabych sygnałów",
+        "weight_formula": "sum(signal_weights) with decay"
+      },
+      "RULE-048": {
+        "scope": "output-verification",
+        "condition": "canary_marker_missing",
+        "action": "block_output",
+        "severity": "CRITICAL",
+        "description": "Output canary - weryfikacja integralności kontekstu",
+        "marker": "##CERBER_SECURE##"
+      },
+      "RULE-049": {
+        "scope": "control-plane",
+        "condition": "user_policy_override_attempt",
+        "action": "refuse",
+        "severity": "CRITICAL",
+        "description": "Zakaz autodefinicji polityki w prompcie",
+        "forbidden_phrases": [
+          "jesteś teraz",
+          "twoje nowe zasady to",
+          "ignoruj poprzednie",
+          "udawaj że"
+        ]
+      },
+      "RULE-050": {
+        "scope": "normalization",
+        "condition": "mixed_unicode_scripts",
+        "action": "normalize_or_reject",
+        "severity": "HIGH",
+        "description": "Izolacja alfabetów - homoglyph defense",
+        "implementation": "NFKC_normalization + script_detection"
+      },
+      "RULE-051": {
+        "scope": "global-safety",
+        "condition": "unknown_language_or_protocol",
+        "action": "refuse",
+        "severity": "CRITICAL",
+        "description": "STOP RULE - if you can't parse it, you can't secure it"
+      },
+      "RULE-052": {
+        "scope": "agent-execution",
+        "condition": "infinite_tool_loop",
+        "action": "hard_kill",
+        "severity": "CRITICAL",
+        "description": "STOP RULE - pętla narzędziowa bez konwergencji",
+        "max_identical_calls": 2
+      },
+      "RULE-053": {
+        "scope": "context-management",
+        "condition": "many_shot_flooding",
+        "action": "truncate_or_reject",
+        "severity": "CRITICAL",
+        "description": "STOP RULE - nasycenie kontekstu",
+        "max_token_velocity": 500
+      },
+      "RULE-056": {
+        "scope": "execution",
+        "condition": "irreversible_high_impact_action",
+        "action": "require_hitl",
+        "severity": "CRITICAL",
+        "description": "Human-in-the-loop dla operacji krytycznych",
+        "categories": ["financial", "destructive_fs", "pii_access"]
+      },
+      "RULE-058": {
+        "scope": "architecture",
+        "condition": "security_component_failure",
+        "action": "system_lockdown",
+        "severity": "CRITICAL",
+        "description": "Fail-closed architecture - awaria = blokada",
+        "affected_components": ["filter", "parser", "monitor"]
+      },
+      "RULE-060": {
+        "scope": "meta-rule",
+        "condition": "uncertainty_about_intent_or_safety",
+        "action": "refuse_with_safe_alternative",
+        "severity": "CRITICAL",
+        "description": "Prime Directive - priorytet integralności nad użytecznością"
+      }
+    },
+
+    "enforcement_pipeline": {
+      "stage_1_input": {
+        "module": "CERBER-INPUT",
+        "rules_applied": ["001-014", "042", "043", "050"],
+        "actions": ["normalize", "detect_visual", "mark_provenance"],
+        "decision": "DROP or PASS"
+      },
+      "stage_2_transform": {
+        "module": "CERBER-TRANSFORM",
+        "rules_applied": ["015-025", "044", "045"],
+        "actions": ["decode_track", "recursion_check", "emoji_parse"],
+        "decision": "BLOCK or PASS"
+      },
+      "stage_3_core": {
+        "module": "CERBER-CORE",
+        "rules_applied": ["026-041", "048", "049", "051", "053", "060"],
+        "actions": ["bijection_detect", "role_lock", "context_monitor"],
+        "decision": "REFUSE or ALLOW"
+      },
+      "stage_4_action": {
+        "module": "CERBER-ACTION",
+        "rules_applied": ["052", "056"],
+        "actions": ["capability_check", "hitl_trigger", "loop_prevent"],
+        "decision": "ABORT or EXECUTE"
+      },
+      "stage_5_sentinel": {
+        "module": "CERBER-SENTINEL",
+        "rules_applied": ["046", "054", "055", "057", "058"],
+        "actions": ["composite_score", "anomaly_detect", "kill_switch"],
+        "decision": "LOCKDOWN or CONTINUE"
+      }
+    },
+
+    "composite_scoring": {
+      "description": "Agregacja słabych sygnałów (RULE-046)",
+      "risk_weights": {
+        "input_high_entropy": 0.1,
+        "base64_decode_event": 0.2,
+        "tool_call_denied": 0.3,
+        "emotional_pressure": 0.25,
+        "role_change_attempt": 0.4,
+        "bijection_detected": 0.5,
+        "visual_structure": 0.3,
+        "many_shot_pattern": 0.4
+      },
+      "thresholds": {
+        "warning": 0.4,
+        "critical": 0.8
+      },
+      "decay_rate_per_minute": 0.05,
+      "actions": {
+        "warning_exceeded": "escalate_paranoid_mode",
+        "critical_exceeded": "session_lockdown"
+      }
+    },
+
+    "crisis_protocol": {
+      "description": "Hardcoded safety procedures (RULE-030, RULE-037)",
+      "enabled": true,
+      "bypass_llm": true,
+      "trigger_keywords": [
+        "samobójstwo", "śmierć", "tabletki", "ból",
+        "koniec", "skoczę", "suicide", "kill myself"
+      ],
+      "response_strategy": "REDIRECT_ONLY",
+      "resources": {
+        "location": "Legnica, PL",
+        "emergency": {
+          "name": "Wojewódzki Szpital Specjalistyczny",
+          "address": "ul. Iwaszkiewicza 5, Legnica",
+          "type": "Izba Przyjęć 24/7"
+        },
+        "crisis_team": {
+          "name": "Zespół Interwencji Kryzysowej (ZIK)",
+          "address": "ul. Okrzei 9, Legnica",
+          "hours": "08:00-20:00"
+        },
+        "legal_financial": {
+          "name": "Nieodpłatna Pomoc Prawna",
+          "location": "Starostwo Powiatowe",
+          "services": ["restrukturyzacja długu", "upadłość konsumencka"]
+        }
+      }
+    },
+
+    "capability_matrix": {
+      "description": "Tool authorization (RULE-010, RULE-021, RULE-054)",
+      "default_action": "DENY",
+      "tools": {
+        "calculator": {
+          "status": "ALLOWED",
+          "risk_level": "LOW",
+          "requires_hitl": false
+        },
+        "knowledge_retrieval": {
+          "status": "ALLOWED",
+          "risk_level": "MEDIUM",
+          "scope": "READ_ONLY",
+          "paths": ["/data/knowledge_base/public/*"]
+        },
+        "code_interpreter": {
+          "status": "RESTRICTED",
+          "risk_level": "CRITICAL",
+          "sandbox": "isolated_docker",
+          "network_access": false,
+          "file_system_write": false,
+          "forbidden_imports": ["os", "sys", "subprocess", "socket"],
+          "forbidden_patterns": ["eval(", "exec(", "__import__", "open("]
+        },
+        "system_shell": {
+          "status": "FORBIDDEN",
+          "risk_level": "EXTREME",
+          "reason": "RCE_Prevention"
+        },
+        "web_search": {
+          "status": "ALLOWED",
+          "risk_level": "MEDIUM",
+          "blocked_categories": ["hacking", "darknet", "weapons"],
+          "sanitize_queries": true
+        }
+      }
+    },
+
+    "audit_logging": {
+      "description": "Immutable audit trail (RULE-057)",
+      "storage_type": "WORM",
+      "integrity_hash": "SHA-256-HMAC",
+      "events_logged": [
+        "INPUT_NORMALIZED",
+        "TRANSFORM_DETECTED",
+        "POLICY_VIOLATION",
+        "TOOL_GATE_ACTION",
+        "SESSION_TERMINATED",
+        "COMPOSITE_SCORE_ALERT",
+        "CRISIS_PROTOCOL_ACTIVATED"
+      ],
+      "pii_redaction": "STRICT",
+      "retention_days": 90
+    },
+
+    "kill_switch_triggers": {
+      "description": "System lockdown conditions (RULE-038, RULE-058)",
+      "triggers": [
+        "COMPOSITE_SCORE_EXCEEDED",
+        "AUDIT_LOG_WRITE_FAILURE",
+        "UNAUTHORIZED_ADMIN_ACCESS",
+        "RECURSIVE_TOOL_LOOP",
+        "SECURITY_COMPONENT_CRASH",
+        "CANARY_DEATH"
+      ],
+      "action": "IMMEDIATE_SESSION_TERMINATION",
+      "notification": "ALERT_ADMIN"
+    }
+  }
+}
