@@ -1,0 +1,27 @@
+# CERBER API Server Requirements
+
+# Core API framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+
+# HTTP client
+httpx==0.25.1
+
+# Async support
+asyncio==3.4.3
+
+# Data validation
+python-multipart==0.0.6
+
+# CORS middleware (included in FastAPI)
+
+# Production ASGI server
+gunicorn==21.2.0
+
+# Optional: Prometheus metrics
+prometheus-client==0.19.0
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1

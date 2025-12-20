@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  cerber-api:
+    build: .
+    container_name: cerber-security-api
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount logs directory for persistent logging
+      - ./logs:/app/logs
+      # Mount data directory for audit trails
+      - ./data:/app/data
+    environment:
+      - PYTHONUNBUFFERED=1
+      - CERBER_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - cerber-network
+
+  # Optional: Prometheus for monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: cerber-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks:
+      - cerber-network
+    profiles:
+      - monitoring
+
+  # Optional: Grafana for visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: cerber-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=cerber_admin
+    networks:
+      - cerber-network
+    profiles:
+      - monitoring
+
+networks:
+  cerber-network:
+    driver: bridge
+
+volumes:
+  prometheus-data:
+  grafana-data:
