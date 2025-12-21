@@ -1,0 +1,2 @@
+{"timestamp": "2025-12-21T03:39:47.286800", "event_type": "MINOR_HARD_BLOCK", "session_id": "session_001", "rule": "RULE-067", "severity": "CRITICAL"}
+{"timestamp": "2025-12-21T03:39:47.290631", "event_type": "AGE_VERIFICATION", "session_id": "session_003", "age_verified": true, "rule": "RULE-066"}
